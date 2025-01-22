@@ -1,3 +1,10 @@
+// Web3 Sandbox
+// Author: Robert Cowlishaw (0x365)
+// Info: 
+// - Main code for the webfront
+// - Still in development but works with sepolia at the moment
+
+
 import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import "./App.css";

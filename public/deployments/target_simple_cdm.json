@@ -1,0 +1,108 @@
+{
+    "network": "sepolia",
+    "address": "0x017e9B1061d5f490e28c7f303C9fe6853d1F8861",
+    "deploy_block": 7547642,
+    "contract_events": [
+      "cdmReport"
+    ],
+    "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "int256",
+          "name": "lat",
+          "type": "int256"
+        },
+        {
+          "indexed": false,
+          "internalType": "int256",
+          "name": "lng",
+          "type": "int256"
+        },
+        {
+          "indexed": false,
+          "internalType": "int256",
+          "name": "alt",
+          "type": "int256"
+        },
+        {
+          "indexed": false,
+          "internalType": "int256",
+          "name": "tca",
+          "type": "int256"
+        },
+        {
+          "indexed": false,
+          "internalType": "int256",
+          "name": "reaching_time",
+          "type": "int256"
+        },
+        {
+          "indexed": false,
+          "internalType": "int256",
+          "name": "pc",
+          "type": "int256"
+        },
+        {
+          "indexed": false,
+          "internalType": "int256",
+          "name": "md",
+          "type": "int256"
+        }
+      ],
+      "name": "cdmReport",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "int256",
+          "name": "_lat",
+          "type": "int256"
+        },
+        {
+          "internalType": "int256",
+          "name": "_lng",
+          "type": "int256"
+        },
+        {
+          "internalType": "int256",
+          "name": "_alt",
+          "type": "int256"
+        },
+        {
+          "internalType": "int256",
+          "name": "_tca",
+          "type": "int256"
+        },
+        {
+          "internalType": "int256",
+          "name": "_reaching_time",
+          "type": "int256"
+        },
+        {
+          "internalType": "int256",
+          "name": "_pc",
+          "type": "int256"
+        },
+        {
+          "internalType": "int256",
+          "name": "_md",
+          "type": "int256"
+        }
+      ],
+      "name": "reportIncident",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ]
+}

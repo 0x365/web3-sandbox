@@ -1,0 +1,86 @@
+{
+    "network": "sepolia",
+    "address": "0x810Fd1C5de13B3FfE91Abc8B93F44e4307aC789c",
+    "deploy_block": 7547661,
+    "contract_events": [
+      "DisasterReport"
+    ],
+    "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "int256",
+          "name": "lat",
+          "type": "int256"
+        },
+        {
+          "indexed": false,
+          "internalType": "int256",
+          "name": "lng",
+          "type": "int256"
+        },
+        {
+          "indexed": false,
+          "internalType": "int256",
+          "name": "time",
+          "type": "int256"
+        },
+        {
+          "indexed": false,
+          "internalType": "int256",
+          "name": "severity",
+          "type": "int256"
+        },
+        {
+          "indexed": false,
+          "internalType": "int256",
+          "name": "eventType",
+          "type": "int256"
+        }
+      ],
+      "name": "DisasterReport",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "int256",
+          "name": "_lat",
+          "type": "int256"
+        },
+        {
+          "internalType": "int256",
+          "name": "_lng",
+          "type": "int256"
+        },
+        {
+          "internalType": "int256",
+          "name": "_time",
+          "type": "int256"
+        },
+        {
+          "internalType": "int256",
+          "name": "_severity",
+          "type": "int256"
+        },
+        {
+          "internalType": "int256",
+          "name": "_eventType",
+          "type": "int256"
+        }
+      ],
+      "name": "reportIncident",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+    ]
+  }
