@@ -1,0 +1,366 @@
+/* General styles */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #F4F4F4; /* Off-White */
+  color: #1F4F4F; /* Dark Teal */
+}
+
+/* Container styling */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  background: #F4F4F4; /* Off-White */
+  position: relative;
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 80px;
+  width: 100%;
+  padding: 0px 0px 0px 40px;
+  background-color: #1F4F4F; /* Dark Teal */
+}
+
+/* Title */
+.header h1 {
+  font-size: 2.5rem;
+  color: #F4F4F4; /* Off-White */
+  margin: 0;
+  text-shadow: 1px 1px 1px #F4F4F4;
+}
+
+/* Burger menu styling */
+.burger-menu {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  position: fixed;
+  top: 25px;
+  right: 25px;
+  z-index: 10;
+}
+
+.burger-menu div {
+  width: 30px;
+  height: 3px;
+  background-color: #F4F4F4; /* Off-White */
+  transition: 0.3s;
+}
+
+.burger-menu.active div:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.burger-menu.active div:nth-child(2) {
+  opacity: 0;
+}
+
+.burger-menu.active div:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+
+/* Sidebar menu */
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: -350px; /* Hidden off-screen on the right */
+  width: 350px;
+  height: 100%;
+  background-color: #1F4F4F; /* Dark Teal */
+  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.3);
+  overflow-y: auto;
+  transition: right 0.3s ease-in-out;
+  z-index: 9;
+  color: #F4F4F4; /* Off-White */
+}
+
+.sidebar-content {
+  padding: 0%;
+}
+
+.sidebar.active {
+  right: 0; /* Slide in from the right */
+}
+
+.sidebar_heading {
+  left: 10%;
+}
+
+.sidebar button {
+  display: block;
+  width: 100%;
+  padding: 15px;
+  background-color: #4D7C79; /* Muted Aqua */
+  color: #F4F4F4; /* Off-White */
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.sidebar button:hover {
+  background-color: #6D3D14;
+}
+
+.sidebar .button-left-text {
+  float: left;
+}
+
+.sidebar .button-right-text {
+  float: right;
+}
+
+.sidebar-content {
+  color: #F4F4F4; /* Off-White */
+  text-align: left;
+  padding: 0px 0px 20px 0px;
+}
+
+.sidebar-content h3 {
+  font-size: 1.5rem;
+  border-bottom: 2px solid #4D7C79; /* Muted Aqua */
+  padding: 25px 0px 25px 25px;
+  color: #F4F4F4; /* Off-White */
+  margin: 0px;
+}
+
+.sidebar-content-subdetails {
+  padding: 10px 0px 0px 25px;
+  color: #F4F4F4; /* Off-White */
+  margin: 0px;
+}
+
+.sidebar-content-subdetails p {
+  padding: 5px 0px 0px 0px;
+  color: #F4F4F4; /* Off-White */
+  margin: 0px;
+}
+
+.spacer {
+  padding: 0px 0px 100px 0px;
+  border-bottom: 2px solid #4D7C79; /* Muted Aqua */
+}
+
+/* Main content */
+.main-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+  width: 100%;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .burger-menu {
+    display: flex;
+  }
+}
+
+.stateVariables {
+  margin-left:60px;
+  width: 100%;
+}
+
+.stateVariables strong {
+  font-size: 1.17em; /* Matches the default h3 size */
+  font-weight: bold; /* Ensures it is bold */
+  color: #4D7C79;
+}
+
+.state-variables-table {
+  width: 90%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  /* padding-right: 30px; */
+  font-size: 16px;
+  text-align: left;
+}
+
+.state-variables-table th,
+.state-variables-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.state-variables-table th {
+  background-color: #f4f4f4;
+  color: #4D7C79;
+  text-transform: uppercase;
+}
+
+.state-variables-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.state-variables-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+.state-variables-table td {
+  word-wrap: break-word;
+}
+
+.contractData {
+  padding: 30px 30px 0px 30px;
+  width: 100%;
+  color: #4D7C79;
+}
+
+.contractData strong {
+  padding-left: 30px;
+  font-size: 1.17em; /* Matches the default h3 size */
+  font-weight: bold; /* Ensures it is bold */
+  margin-bottom: 20px; /* Adds space below the header */
+  color: #4D7C79;
+}
+
+
+
+
+
+
+
+.function-calls {
+  width: 100%;
+  margin-left: 60px;
+  margin-top:30px;
+}
+
+.function-calls strong {
+  font-size: 1.17em; /* Matches the default h3 size */
+  font-weight: bold; /* Ensures it is bold */
+  color: #4D7C79;
+}
+
+/* Overall container for all functions */
+.all-functions {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Space between function boxes */
+  align-items: left; /* Center align in the container */
+  padding-top: 10px;
+  background-color: #F4F4F4; /* Off-white background */
+}
+
+/* Individual function box styling */
+.function-boxes {
+  background-color: #F4F4F4;
+  border: 2px solid #4D7C79; /* Muted Aqua */
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  width: 100%;
+  max-width: 800px; /* Limit width for readability */
+}
+
+/* Function title styling */
+.function-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1F4F4F; /* Dark Teal */
+  margin-bottom: 15px;
+  margin-top: 0px;
+  text-align: center; /* Center align titles */
+}
+
+/* Row for inputs and button */
+.function-row {
+  display: flex;
+  flex-wrap: wrap; /* Wrap items on smaller screens */
+  /* align-items: center; */
+  gap: 15px; /* Space between inputs and button */
+  justify-content: space-between; /* Distribute items evenly */
+  float: bottom;
+}
+
+/* Group styling for inputs */
+.input-group {
+  display: flex;
+  gap: 15px; /* Space between input fields */
+  flex-wrap: wrap; /* Wrap on smaller screens */
+  flex-grow: 1; /* Ensure it takes up space */
+}
+
+/* Input field styling */
+.input-field {
+  display: flex;
+  flex-direction: column; /* Stack label and input */
+  flex-grow: 1; /* Ensure equal space for inputs */
+  min-width: 180px; /* Ensure a minimum width */
+}
+
+.input-field label {
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #4D7C79; /* Muted Aqua */
+  margin-bottom: 5px;
+}
+
+.input-field input {
+  padding: 10px 15px;
+  font-size: 1rem;
+  border: 1px solid #4D7C79;
+  border-radius: 4px;
+  transition: border-color 0.3s;
+}
+
+.input-field input:focus {
+  border-color: #4D7C79; /* Muted Aqua on focus */
+  outline: none;
+  box-shadow: 0 0 5px rgba(77, 124, 121, 0.5); /* Highlight on focus */
+}
+
+/* Button styling */
+.contract-buttons {
+  background-color: #4D7C79; /* Warm Coral */
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 12px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  white-space: nowrap; /* Prevent text wrapping */
+}
+
+.contract-buttons:hover {
+  background-color: #6D3D14; /* Dark Teal on hover */
+  transform: translateY(-2px); /* Lift effect */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Enhanced shadow */
+}
+
+.contract-buttons:active {
+  background-color: #4D7C79; /* Muted Aqua on click */
+  transform: translateY(2px); /* Push-down effect */
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2); /* Inner shadow */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .function-row {
+    flex-direction: column; /* Stack inputs and button vertically */
+    gap: 10px; /* Reduce space on smaller screens */
+  }
+
+  .input-group {
+    justify-content: center; /* Center align inputs */
+  }
+
+  .contract-buttons {
+    align-self: center; /* Center button when stacked */
+    width: 100%; /* Full width button on small screens */
+  }
+}
