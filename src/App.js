@@ -79,7 +79,7 @@ const App = () => {
         const fetchData = async () => {
             try {
                 const data = await fetch("/fileManifest.json").then((res) => res.json());
-                
+                console.log(data)
                 const results = await Promise.all(
                   data.map(async (file) => {
                     const file_data = await fetch(`/deployments/${file}`).then((res) => res.json());
@@ -289,6 +289,7 @@ const App = () => {
           const contractInstance = new ethers.Contract(address, abi, signer);
           // console.log("Here2")
           console.log(abi)
+
           // if (valueInEther != "0") {
           //   const valueInWei = ethers.parseEther(valueInEther);
           //   console.log("Here3")

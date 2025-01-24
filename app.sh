@@ -15,7 +15,7 @@ fi
 # Check if node_modules directory exists
 if [ ! -f ".env" ]; then
   echo "You need to add your API url in .env file first"
-  cp setup/env-template ./.env
+  cp setup/.env-template ./.env
   exit 1
 fi
 
