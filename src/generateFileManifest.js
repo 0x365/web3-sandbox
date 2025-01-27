@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Specify the public folder path
-const PUBLIC_FOLDER = path.join(__dirname, '..', 'public/deployments');
+const PUBLIC_FOLDER = path.join(__dirname, '..', 'public/targets');
 const OUTPUT_FILE = path.join(PUBLIC_FOLDER, "..", 'fileManifest.json');
 
 // Function to check if a path has an extension (indicating a file)

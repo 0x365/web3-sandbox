@@ -1,0 +1,114 @@
+{
+    "network": "sepolia",
+    "address": "0x892863b9DCb49199b716094e8649c0AD26164B6e",
+    "deploy_block": 7581473,
+    "contract_events": [
+      "CollisionAlert"
+    ],
+    "abi": [
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "timestamp",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "int256",
+              "name": "lat",
+              "type": "int256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "lng",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "alt",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "tca",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "reaching_time",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "pc",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "md",
+              "type": "uint256"
+            }
+          ],
+          "name": "CollisionAlert",
+          "type": "event"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "int256",
+              "name": "_lat",
+              "type": "int256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_lng",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_alt",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_tca",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_reaching_time",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_pc",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_md",
+              "type": "uint256"
+            }
+          ],
+          "name": "createCDM",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        }
+      ]
+}

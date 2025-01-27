@@ -16,10 +16,10 @@ const App = () => {
     const [chainHex, setChainHex] = useState(null);
     const [contractABI, setContractABI] = useState([]);
     const [contractAddress, setContractAddress] = useState([]);
+    const [fileNames, setFileNames] = useState([]);
     const [currentAddress, setCurrentAddress] = useState(null);
     const [currentABI, setCurrentABI] = useState(null);
-    // const [contractOwner, setContractOwner] = useState(null);
-    // const [contractBalance, setContractBalance] = useState(null);
+    const [currentFileName, setCurrentFileName] = useState(null);
     const [sidebarVisible, setSidebarVisible] = useState(false);
     const [contractButtons, setContractButtons] = useState([]);
     const [stateVariables, setStateVariables] = useState([]);
@@ -82,7 +82,7 @@ const App = () => {
                 console.log(data)
                 const results = await Promise.all(
                   data.map(async (file) => {
-                    const file_data = await fetch(`/deployments/${file}`).then((res) => res.json());
+                    const file_data = await fetch(`/targets/${file}`).then((res) => res.json());
                     // console.log(file_data)
 
                     const buttonLabel = `${file_data.address.substring(0, 10)}...${file_data.address.substring(32)} ${file_data.deploy_block}`;
@@ -91,6 +91,7 @@ const App = () => {
                       abi: file_data.abi,
                       address: file_data.address,
                       label: buttonLabel,
+                      fileName: file,
                     };
                   })
                 );
@@ -99,7 +100,9 @@ const App = () => {
                 setContractABI(filteredResults.map((r) => r.abi));
                 setContractAddress(filteredResults.map((r) => r.address));
                 setContractButtons(filteredResults.map((r) => r.label));
-                const addresses = filteredResults.map((r) => r.address)
+                setFileNames(filteredResults.map((r) => r.fileName));
+                const addresses = filteredResults.map((r) => r.address);
+                const fileNames = filteredResults.map((r) => r.fileName);
                 let target = 0
                 for (let i = 0; i < addresses.length; i++) {
                   if (addresses[i] === targetContract) {
@@ -107,7 +110,7 @@ const App = () => {
                   }
                 }
                 // console.log("test")
-                displayContract(addresses[target], filteredResults.map((r) => r.abi)[target]);
+                displayContract(addresses[target], filteredResults.map((r) => r.abi)[target], fileNames[target]);
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
@@ -154,7 +157,7 @@ const App = () => {
     //     }
     // };
 
-    const displayContract = async (address, abi) => {
+    const displayContract = async (address, abi, fileName) => {
         
         if (!chainHex) {
             console.error("Provider not connected.");
@@ -168,7 +171,8 @@ const App = () => {
             // console.log(contractBalance);
             // setContractOwner(owner);
             setCurrentAddress(address);
-            setCurrentABI(abi)
+            setCurrentFileName(fileName.substring(0,fileName.length-5));
+            setCurrentABI(abi);
             setFuncArgs({});
             // setContractBalance(contractBalance);
 
@@ -425,10 +429,10 @@ const App = () => {
                     {contractButtons.map((label, index) => (
                         <button
                             key={index}
-                            onClick={() => displayContract(contractAddress[index], contractABI[index])}
+                            onClick={() => displayContract(contractAddress[index], contractABI[index], fileNames[index])}
                         >
-                          <span className="button-left-text">{label.substring(0,23)}</span>
-                          <span className="button-right-text">{label.substring(23)}</span>
+                          <span className="button-left-text">{fileNames[index].substring(0,fileNames[index].length-5)}</span>
+                          {/* <span className="button-right-text">{label.substring(23)}</span> */}
                         </button>
                     ))}
                 </div>
@@ -438,6 +442,9 @@ const App = () => {
               
               <div className="contractData">
                 <strong>Connected Contract:</strong> {currentAddress ? currentAddress : "Loading..."}
+              </div>
+              <div className="contractData">
+                <strong>Contract Name:</strong> {currentFileName ? currentFileName : "Loading..."}
               </div>
               <div className="contractData">
                 {/* <strong>Contract Owner:</strong> {contractOwner ? contractOwner : "Loading..."} */}
