@@ -1,0 +1,263 @@
+{
+    "network": "sepolia",
+    "address": "0x10C9C54e74443f23127CcfcfF01fC061A1Fec211",
+    "deploy_block": 7580970,
+    "contract_events": [
+      "DisasterReportEQ",
+      "DisasterReportTC"
+    ],
+    "abi": [
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "timestamp",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "source",
+              "type": "string"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "predictedTime",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "int256",
+              "name": "lat",
+              "type": "int256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "lon",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "magnitude",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "depth",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "mmi",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "populationAtRisk",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "tsunamiRisk",
+              "type": "uint256"
+            }
+          ],
+          "name": "DisasterReportEQ",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "timestamp",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "source",
+              "type": "string"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "predictedTime",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "int256",
+              "name": "lat",
+              "type": "int256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "lon",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "category",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "maxWindSpeed",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "populationInCat",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "populationAtRisk",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "countries",
+              "type": "uint256"
+            }
+          ],
+          "name": "DisasterReportTC",
+          "type": "event"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "source",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "predictedTime",
+              "type": "uint256"
+            },
+            {
+              "internalType": "int256",
+              "name": "lat",
+              "type": "int256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "lon",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "magnitude",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "depth",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "mmi",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "populationAtRisk",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "tsunamiRisk",
+              "type": "uint256"
+            }
+          ],
+          "name": "reportDisasterEQ",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "source",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "predictedTime",
+              "type": "uint256"
+            },
+            {
+              "internalType": "int256",
+              "name": "lat",
+              "type": "int256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "lon",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "category",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "maxWindSpeed",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "populationInCat",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "populationAtRisk",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "countries",
+              "type": "uint256"
+            }
+          ],
+          "name": "reportDisasterTC",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        }
+      ]
+}
