@@ -288,7 +288,9 @@ const App = () => {
           // console.log(signer)
           const contractInstance = new ethers.Contract(address, abi, signer);
           // console.log("Here2")
-          console.log(abi)
+            //   console.log(abi)
+
+            // console.log(args)
 
           // if (valueInEther != "0") {
           //   const valueInWei = ethers.parseEther(valueInEther);
