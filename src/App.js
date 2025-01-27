@@ -7,6 +7,7 @@
 
 import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
+import { networks } from './networks'; 
 import "./App.css";
 
 const App = () => {
@@ -17,44 +18,119 @@ const App = () => {
     const [contractABI, setContractABI] = useState([]);
     const [contractAddress, setContractAddress] = useState([]);
     const [fileNames, setFileNames] = useState([]);
-    const [currentAddress, setCurrentAddress] = useState(null);
-    const [currentABI, setCurrentABI] = useState(null);
-    const [currentFileName, setCurrentFileName] = useState(null);
+    const [currentContractData, setCurrentContractData] = useState({
+        contractAddress: null,
+        contractFileName: null,
+        contractABI: null,
+    });
     const [sidebarVisible, setSidebarVisible] = useState(false);
     const [contractButtons, setContractButtons] = useState([]);
     const [stateVariables, setStateVariables] = useState([]);
     const [contractFunctionButtons, setContractFunctionButtons] = useState([]);
-    const [funcValue, setFuncValue] = useState('');
-    
-    const targetContract = process.env.REACT_APP_TARGET_CONTRACT;
+    const [funcArgs, setFuncArgs] = useState({});
+    const [funcValue, setFuncValue] = useState(null);
 
-    const networks = {
-        31337: { 
-          name: "Localhost", 
-          rpc: process.env.REACT_APP_LOCAL_URL, 
-          nativeCurrency: {
-            name: 'ETH',
-            symbol: 'ETH',
-            decimals: 18,
-          },
-          blockExplorerUrls: ["https://www.google.com"]
-        },
-        11155111: {
-          name: "Sepolia",
-          rpc: process.env.REACT_APP_API_URL,
-          nativeCurrency: {
-            name: 'SepoliaETH',
-            symbol: 'ETH',
-            decimals: 18,
-          },
-          blockExplorerUrls: ["https://www.google.com"]
-        }
-    };
 
     const getProvider = () => {
         if (!window.ethereum) throw new Error("MetaMask is not installed!");
         return new ethers.BrowserProvider(window.ethereum);
     };
+
+    const handleFuncArgs = (inputIndex, value) => {
+        setFuncArgs((prevValues) => ({
+            ...prevValues,
+            [inputIndex]: value,
+        }));
+    };
+
+    const handleFuncValue = (e) => {
+        setFuncValue(e.target.value);
+        console.log(e.target.value);
+    };
+
+    const getSigner = async () => {
+        if (!window.ethereum) {
+            throw new Error("MetaMask is not installed!");
+        }
+        try {
+            // Create a provider instance
+            const provider = new ethers.BrowserProvider(window.ethereum);
+            
+            // Request account access if not already connected
+            await provider.send("eth_requestAccounts", []);
+            
+            // Get the signer from the provider
+            const signer = await provider.getSigner();
+            return signer;
+        } catch (error) {
+            console.error("Error getting signer:", error);
+            alert("Please connect your wallet to interact with the app.");
+        }
+    };
+
+    const callContractFunction = async (contractData, func, args=[], valueInEther = null) => {
+        try {
+            // For functions with parameters, use a prompt or form to gather input
+            args = Object.values(args);
+            const signer = await getSigner();
+            const contractInstance = new ethers.Contract(contractData.contractAddress, contractData.contractABI, signer);
+
+            const valueInEth = valueInEther || "0";
+            const tx = await contractInstance[func.name](...args, {value: ethers.parseEther(valueInEth)});
+
+            console.log(`Transaction sent for ${func.name}:`, tx);
+            const receipt = await tx.wait();
+            console.log(`Transaction mined for ${func.name}:`, receipt);
+
+            alert(`Function ${func.name} called successfully!`);
+        } catch (error) {
+            console.error(`Error calling function ${func.name}:`, error);
+            alert(`Failed to call function ${func.name}.`);
+        }
+    };
+
+    const displayContract = async (address, abi, fileName) => {
+        
+        if (!chainHex) {
+            console.error("Provider not connected.");
+            return;
+        }
+        try {
+            const provider = new ethers.JsonRpcProvider(networks[chainHex]?.rpc);
+            const contractInstance = new ethers.Contract(address, abi, provider);
+
+            setFuncArgs({});
+            setCurrentContractData({
+                contractAddress: address,
+                contractFileName: fileName.substring(0,fileName.length-5),
+                contractABI: abi,
+            });
+
+            const tempStateVariables = [];
+            for (let i = 0; i < abi.length; i++) {
+                if (abi[i].type === 'function' && abi[i].stateMutability === 'view') {
+                    try {
+                        // Check if the function is a getter for a state variable
+                        const variableName = abi[i].name;
+                        const variableType = abi[i].outputs[0].type;
+                        if (variableName && variableName !== 'owner') { // Avoid displaying 'owner' again
+                            const value = await contractInstance[variableName]();
+                            tempStateVariables.push({ name: variableName, type: variableType, value: value.toString() });
+                        }
+                    } catch (error) {
+                        console.error(`Error fetching ${abi[i].name}:`, error);
+                    }
+                }
+            }
+            setStateVariables(tempStateVariables);
+        } catch (error) {
+            console.error("Error interacting with contract:", error);
+        }
+    };
+
+    
+
+    const toggleSidebar = () => setSidebarVisible(!sidebarVisible);
 
     useEffect(() => {
         const initialize = async () => {
@@ -103,14 +179,8 @@ const App = () => {
                 setFileNames(filteredResults.map((r) => r.fileName));
                 const addresses = filteredResults.map((r) => r.address);
                 const fileNames = filteredResults.map((r) => r.fileName);
-                let target = 0
-                for (let i = 0; i < addresses.length; i++) {
-                  if (addresses[i] === targetContract) {
-                    target = i;
-                  }
-                }
-                // console.log("test")
-                displayContract(addresses[target], filteredResults.map((r) => r.abi)[target], fileNames[target]);
+
+                displayContract(addresses[0], filteredResults.map((r) => r.abi)[0], fileNames[0]);
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
@@ -118,206 +188,59 @@ const App = () => {
         if (chainHex) fetchData();
     }, [chainHex]);  // eslint-disable-line react-hooks/exhaustive-deps
 
-    // const changeRPC = async (chainId) => {
-    //     const network = networks[chainId];
-    //     if (!network) throw new Error("Unsupported network");
 
-    //     try {
-    //       await window.ethereum.request({
-    //         method: 'wallet_switchEthereumChain',
-    //         params: [{ chainId: ethers.toBeHex(chainId) }],
-    //       });
-    //       console.log('Successfully switched network.');
-    //     } catch (switchError) {
-    //       if (switchError.code === 4902) {
-    //         // Network not found in MetaMask, try adding it
-    //         console.log('Network not found. Attempting to add network...');
-    //         try {
-    //           await window.ethereum.request({
-    //               method: "wallet_addEthereumChain",
-    //               params: [
-    //                   {
-    //                       chainId: ethers.toBeHex(chainId),
-    //                       rpcUrls: [network.rpc],
-    //                       chainName: network.name,
-    //                       nativeCurrency: network.nativeCurrency,
-    //                       blockExplorerUrls: network.blockExplorerUrls,
-    //                   },
-    //               ],
-    //           });
-    //         } catch (addError) {
-    //           console.error('Error adding network:', addError.message, addError);
-    //         }
-    //       } else if (switchError.code === 4001) {
-    //         // User rejected the request
-    //         console.log('User canceled network switch.');
-    //       } else {
-    //         console.error('Error switching network:', switchError.message, switchError);
-    //       }
-    //     }
-    // };
+    
 
-    const displayContract = async (address, abi, fileName) => {
-        
-        if (!chainHex) {
-            console.error("Provider not connected.");
-            return;
-        }
-        try {
-            const provider = new ethers.JsonRpcProvider(networks[chainHex]?.rpc);
-            const contractInstance = new ethers.Contract(address, abi, provider);
-            // const owner = await contractInstance.owner();
-            // const contractBalance = await contractInstance.balance;
-            // console.log(contractBalance);
-            // setContractOwner(owner);
-            setCurrentAddress(address);
-            setCurrentFileName(fileName.substring(0,fileName.length-5));
-            setCurrentABI(abi);
-            setFuncArgs({});
-            // setContractBalance(contractBalance);
-
-            const tempStateVariables = [];
-            for (let i = 0; i < abi.length; i++) {
-                if (abi[i].type === 'function' && abi[i].stateMutability === 'view') {
-                    try {
-                        // Check if the function is a getter for a state variable
-                        const variableName = abi[i].name;
-                        const variableType = abi[i].outputs[0].type;
-                        if (variableName && variableName !== 'owner') { // Avoid displaying 'owner' again
-                            const value = await contractInstance[variableName]();
-                            tempStateVariables.push({ name: variableName, type: variableType, value: value.toString() });
-                        }
-                    } catch (error) {
-                        console.error(`Error fetching ${abi[i].name}:`, error);
-                    }
-                }
-            }
-            setStateVariables(tempStateVariables);
-        } catch (error) {
-            console.error("Error interacting with contract:", error);
-        }
-    };
-
-    const [funcArgs, setFuncArgs] = useState({});
+    
 
     useEffect(() => {
-      const getFunctionCallButtons = async () => {
-          const functions = currentABI.filter(item => item.type === 'function' && item.stateMutability !== 'view');
-          const functionButtons = functions.map((func, index) => (
-            <div key={index} className="function-container">
-            <h3 className="function-title">Call {func.name}</h3>
-            <div className="function-row">
-              <div className="input-group">
-                {func.stateMutability === "payable" ? (
-                  <>
-                    <div className="input-field">
-                      <label>Pay Contract Amount</label>
-                      <input
-                        type="number"
-                        value={funcValue}
-                        onChange={handleFuncValue}
-                        placeholder="Enter ETH Value"
-                      />
+        const getFunctionCallButtons = async () => {
+            const functions = currentContractData.contractABI.filter(item => item.type === 'function' && item.stateMutability !== 'view');
+            const functionButtons = functions.map((func, index) => (
+                <div key={index} className="function-container">
+                <h3 className="function-title">Call {func.name}</h3>
+                <div className="function-row">
+                <div className="input-group">
+                    {func.stateMutability === "payable" ? (
+                    <>
+                        <div className="input-field">
+                        <label>Pay Contract Amount</label>
+                        <input
+                            type="number"
+                            value={funcValue}
+                            onChange={handleFuncValue}
+                            placeholder="Enter ETH Value"
+                        />
+                        </div>
+                    </>
+                    ) : (<></>)}
+                    {func.inputs.map((input, inputIndex) => (
+                    <div key={inputIndex} className="input-field">
+                        <label>{input.name} ({input.type})</label>
+                        <input
+                        type="text"
+                        placeholder={`Enter ${input.name}`}
+                        value={funcArgs[inputIndex] || ''}
+                        onChange={(e) => handleFuncArgs(inputIndex, e.target.value)}
+                        />
                     </div>
-                  </>
-                ) : (<></>)}
-                {func.inputs.map((input, inputIndex) => (
-                  <div key={inputIndex} className="input-field">
-                    <label>{input.name} ({input.type})</label>
-                    <input
-                      type="text"
-                      placeholder={`Enter ${input.name}`}
-                      value={funcArgs[inputIndex] || ''}
-                      onChange={(e) => handleFuncArgs(inputIndex, e.target.value)}
-                    />
-                  </div>
-                ))}
-              </div>
-              <button
-                className="contract-buttons"
-                onClick={() => callContractFunction(currentAddress, currentABI, func, funcArgs, funcValue)}
-              >
-                Call {func.name}
-              </button>
+                    ))}
+                </div>
+                <button
+                    className="contract-buttons"
+                    onClick={() => callContractFunction(currentContractData, func, funcArgs, funcValue)}
+                >
+                    Call {func.name}
+                </button>
+                </div>
             </div>
-          </div>
-          ));
-          setContractFunctionButtons(functionButtons);
-      };
-      if (currentABI) getFunctionCallButtons();
-    }, [currentABI, funcArgs, funcValue]); // eslint-disable-line react-hooks/exhaustive-deps
+            ));
+            setContractFunctionButtons(functionButtons);
+        };
+        if (currentContractData.contractABI) getFunctionCallButtons();
+    }, [currentContractData, funcArgs, funcValue]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    const handleFuncArgs = (inputIndex, value) => {
-      setFuncArgs((prevValues) => ({
-        ...prevValues,
-        [inputIndex]: value,
-      }));
-    };
-
-    const handleFuncValue = (e) => {
-      setFuncValue(e.target.value);
-      console.log(e.target.value);
-    };
-
-    const getSigner = async () => {
-      if (!window.ethereum) {
-          throw new Error("MetaMask is not installed!");
-      }
-      try {
-          // Create a provider instance
-          const provider = new ethers.BrowserProvider(window.ethereum);
-          
-          // Request account access if not already connected
-          await provider.send("eth_requestAccounts", []);
-          
-          // Get the signer from the provider
-          const signer = await provider.getSigner();
-          // console.log("Signer address:", await signer.getAddress());
-          return signer;
-      } catch (error) {
-          console.error("Error getting signer:", error);
-          alert("Please connect your wallet to interact with the app.");
-      }
-  };
-
-    const callContractFunction = async (address, abi, func, args=[], valueInEther = "0") => {
-      try {
-          // For functions with parameters, use a prompt or form to gather input
-          // const args = []; // Populate with argument values as needed
-
-          // console.log("Here1")
-          args = Object.values(args);
-          // console.log(args);
-          const signer = await getSigner();
-          // console.log(signer)
-          const contractInstance = new ethers.Contract(address, abi, signer);
-          // console.log("Here2")
-            //   console.log(abi)
-
-            // console.log(args)
-
-          // if (valueInEther != "0") {
-          //   const valueInWei = ethers.parseEther(valueInEther);
-          //   console.log("Here3")
-          //   const tx = await contractInstance[func.name](...args, {
-          //     value: valueInWei
-          //   });
-          // } else {
-          // console.log(func.name)
-          // console.log(args)
-          const tx = await contractInstance[func.name](...args, {});
-
-          // console.log("Here")
-          console.log(`Transaction sent for ${func.name}:`, tx);
-          const receipt = await tx.wait();
-          console.log(`Transaction mined for ${func.name}:`, receipt);
-
-          alert(`Function ${func.name} called successfully!`);
-      } catch (error) {
-          console.error(`Error calling function ${func.name}:`, error);
-          alert(`Failed to call function ${func.name}.`);
-      }
-  };
+    
 
   
 
@@ -355,7 +278,7 @@ const App = () => {
         };
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-    const toggleSidebar = () => setSidebarVisible(!sidebarVisible);
+    
 
     return (
         <div className="app-container">
@@ -400,28 +323,15 @@ const App = () => {
                 </div>
                  
 
-                {/*
-                This breaks everything at the moment for some reason
-                <div className="button-list">
-                    <button onClick={() => changeRPC(31337)}>Switch to Localhost</button>
-                    <button onClick={() => changeRPC(11155111)}>Switch to Sepolia</button>
-                </div> */}
-
                 <div className="spacer"></div>
 
                 <div className="sidebar-content">
                     <h3>Contract Selector</h3>
                     <div className="sidebar-content-subdetails">
                         <p>
-                            <strong>Contract Address:</strong>
+                            <strong>Currently chosen contract:</strong>
                         </p>
-                        <p>{currentAddress?.substring(0, 27) + "..." || "Loading..."}</p>
-                    </div>
-                    <div className="sidebar-content-subdetails">
-                        <p>
-                            <strong>Contract Owner:</strong>
-                        </p>
-                        {/* <p>{contractOwner?.substring(0, 27) + "..." || "Loading..."}</p> */}
+                        <p>{currentContractData.contractFileName || "Loading..."}</p>
                     </div>
                 </div>
 
@@ -432,7 +342,6 @@ const App = () => {
                             onClick={() => displayContract(contractAddress[index], contractABI[index], fileNames[index])}
                         >
                           <span className="button-left-text">{fileNames[index].substring(0,fileNames[index].length-5)}</span>
-                          {/* <span className="button-right-text">{label.substring(23)}</span> */}
                         </button>
                     ))}
                 </div>
@@ -441,20 +350,14 @@ const App = () => {
             <main className="main-content">
               
               <div className="contractData">
-                <strong>Connected Contract:</strong> {currentAddress ? currentAddress : "Loading..."}
+                <strong>Connected Contract: </strong> {currentContractData.contractAddress ? currentContractData.contractAddress : "Loading..."}
               </div>
               <div className="contractData">
-                <strong>Contract Name:</strong> {currentFileName ? currentFileName : "Loading..."}
-              </div>
-              <div className="contractData">
-                {/* <strong>Contract Owner:</strong> {contractOwner ? contractOwner : "Loading..."} */}
-              </div>
-              <div className="contractData">
-                {/* <strong>Contract Balance:</strong> {contractBalance ? contractBalance : "Loading..."} */}
+                <strong>Contract Name: </strong> {currentContractData.contractFileName ? currentContractData.contractFileName : "Loading..."}
               </div>
 
-              <div className="stateVariables">
-                <strong>State Variables</strong>
+              <div className="contractData">
+                <strong>State Variables: </strong>
                 {stateVariables.length > 0 ? (
                     <table className="state-variables-table">
                         <thead>
@@ -475,19 +378,19 @@ const App = () => {
                         </tbody>
                     </table>
                 ) : (
-                    <p>No state variables found or loading...</p>
+                    "No state variables found"
                 )}
             </div>
 
             <div className="function-calls">
-              <strong>Function Calls</strong>
-              <div className="all-functions">
-                  {contractFunctionButtons.map((button, index) => (
-                      <div key={index} className="function-boxes">
-                          {button}
-                      </div>
-                  ))}
-              </div>
+                <strong>Function Calls:</strong>
+                <div className="all-functions">
+                    {contractFunctionButtons.map((button, index) => (
+                        <div key={index} className="function-boxes">
+                            {button}
+                        </div>
+                    ))}
+                </div>
             </div>
 
             </main>
